@@ -1,0 +1,33 @@
+# Project Configuration for Network Intrusion Detection (MLP Baseline)
+data:
+  raw_cic_dir: "data/raw/cicids2017"
+  raw_unsw_dir: "data/raw/unsw_nb15"
+  processed_dir: "data/processed"
+  features:
+    - duration
+    - src_packets
+    - dst_packets
+    - src_bytes
+    - dst_bytes
+    - rate
+    - src_packet_mean
+    - dst_packet_mean
+    - src_win_bytes
+    - dst_win_bytes
+  log_transform: true
+
+streaming:
+  stream_mode: "local"
+  local_stream_dir: "data/stream_buffer"
+  local_stream_speed: 100
+  kafka_bootstrap_servers: "localhost:9092"
+  kafka_topic: "network-traffic"
+
+model:
+  mlp:
+    input_dim: 10
+    hidden_dims: [128, 64, 32]
+    dropout: 0.3
+    learning_rate: 0.001
+    epochs: 20
+    batch_size: 256
