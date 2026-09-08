@@ -1,0 +1,33 @@
+# Python artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+
+# Environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Large datasets & raw captures (>10MB)
+data/*.parquet
+data/live_results.json
+archive/
+archive (1)/
+data/stream_input/
+data/checkpoint/
+data/logs/
+
+# Scripts & helpers
+*.sh
+push_to_github.ps1
+
+# Temporary
+repomix-output.xml
+tmp/

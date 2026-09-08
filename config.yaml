@@ -1,0 +1,82 @@
+# Configuration for Hybrid Anomaly Detection Pipeline
+
+data:
+  raw_cic_dir: "data/raw_cic"
+  raw_unsw_dir: "data/raw_unsw"
+  processed_dir: "data"
+  log_transform: true         # Apply log1p(max(0, x)) before scaling to stabilize distributions
+  features:
+    - "duration"
+    - "src_packets"
+    - "dst_packets"
+    - "src_bytes"
+    - "dst_bytes"
+    - "rate"
+    - "src_packet_mean"
+    - "dst_packet_mean"
+    - "src_win_bytes"
+    - "dst_win_bytes"
+
+models:
+  kmeans:
+    n_clusters: 16
+    percentile_threshold: 80.0  # Outlier gate: 80% of normal distances are passed through
+    save_path: "data/kmeans_model.pkl"
+  
+  lstm:
+    model_type: "gru"           # 'lstm' or 'gru'
+    seq_length: 5               # Sequence window size
+    input_dim: 10
+    hidden_dim: 64
+    num_layers: 2
+    dropout: 0.2
+    learning_rate: 0.001
+    batch_size: 128
+    epochs: 5
+    save_path: "data/lstm_model.pt"
+
+  # ── Deep Learning Model Comparison ──
+  mlp:
+    input_dim: 10
+    hidden_dims: [128, 64, 32]
+    dropout: 0.3
+    learning_rate: 0.001
+    batch_size: 256
+    epochs: 20
+    save_path: "data/mlp_model.pt"
+
+  cnn:
+    input_dim: 10
+    num_filters: [32, 64, 128]
+    dropout: 0.3
+    learning_rate: 0.001
+    batch_size: 256
+    epochs: 20
+    save_path: "data/cnn_model.pt"
+
+  bilstm:
+    input_dim: 10
+    hidden_dim: 64
+    num_layers: 2
+    dropout: 0.3
+    learning_rate: 0.001
+    seq_length: 5
+    batch_size: 128
+    epochs: 15
+    save_path: "data/bilstm_model.pt"
+
+drift:
+  alpha: 0.05                 # Significance level for KS-test
+  min_drift_features: 3       # Minimum number of drifted features to trigger retraining
+  window_size: 1000           # Rolling window size for drift detection
+  reference_size: 5000        # Size of the baseline reference window
+  retrain_window_size: 10000  # Number of recent flows to use for retraining
+
+streaming:
+  kafka_bootstrap_servers: "localhost:9092"
+  kafka_topic: "network-traffic"
+  kafka_group_id: "anomaly-detection-group"
+  stream_mode: "local"        # 'kafka' or 'local'
+  local_stream_dir: "data/stream_input"
+  local_stream_speed: 100     # Flows per second to stream in demo mode
+  checkpoint_dir: "data/checkpoint"
