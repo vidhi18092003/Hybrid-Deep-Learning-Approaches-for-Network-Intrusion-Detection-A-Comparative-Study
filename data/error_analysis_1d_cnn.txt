@@ -1,0 +1,18 @@
+Error Analysis: 1D-CNN
+==================================================
+
+Total samples: 50000
+Correct predictions: 49499
+False Positives: 351
+False Negatives: 150
+
+Classification Report:
+              precision    recall  f1-score   support
+
+      Benign       1.00      0.99      0.99     42761
+      Attack       0.95      0.98      0.97      7239
+
+    accuracy                           0.99     50000
+   macro avg       0.97      0.99      0.98     50000
+weighted avg       0.99      0.99      0.99     50000
+
